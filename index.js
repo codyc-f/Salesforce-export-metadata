@@ -1,4 +1,5 @@
 const jsforce = require('jsforce');
+const readline = require('readline');
 
 // Create a connection to Salesforce
 // If connecting to a production environment, use the login URL 'https://login.salesforce.com'
@@ -8,8 +9,8 @@ const conn = new jsforce.Connection({
 });
 
 // Replace with your Salesforce login credentials
-const username = 'arvoailtd@pboedition.com';
-const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Password should include the security token appended at the end if required
+const username = '';
+const password = 'x'; // Password should include the security token appended at the end if required
 
 // Log in to Salesforce using JSforce
 conn.login(username, password, function(err, userInfo) {
