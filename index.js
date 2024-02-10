@@ -9,7 +9,7 @@ const conn = new jsforce.Connection({
 
 // Replace with your Salesforce login credentials
 const username = 'arvoailtd@pboedition.com';
-const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Password should include the security token appended at the end if required
+const password = 'asd'; // Password should include the security token appended at the end if required
 
 // Log in to Salesforce using JSforce
 conn.login(username, password, function(err, userInfo) {
