@@ -1,0 +1,25 @@
+{
+  "name": "metadata_export",
+  "version": "1.0.0",
+  "description": "exports salesforce metadata",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codyc-f/Salesforce-export-metadata.git"
+  },
+  "keywords": [
+    "development"
+  ],
+  "author": "Cody Choo-Foo",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/codyc-f/Salesforce-export-metadata/issues"
+  },
+  "homepage": "https://github.com/codyc-f/Salesforce-export-metadata#readme",
+  "dependencies": {
+    "jsforce": "^1.11.1"
+  }
+}
