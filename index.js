@@ -9,8 +9,8 @@ const conn = new jsforce.Connection({
 });
 
 // Replace with your Salesforce login credentials
-const username = '';
-const password = 'x'; // Password should include the security token appended at the end if required
+const username = 'arvoailtd@pboedition.com';
+const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Password should include the security token appended at the end if required
 
 // Log in to Salesforce using JSforce
 conn.login(username, password, function(err, userInfo) {
@@ -22,8 +22,8 @@ conn.login(username, password, function(err, userInfo) {
     console.log("Connected to Salesforce as user:", userInfo.id);
 
     // Perform operations after successful connection
-    // For example, querying records:
-    conn.query('SELECT Id, First_Name__c, gender__c FROM testData__c LIMIT 300', function(err, result) {
+    //SELECT Label, QualifiedApiName FROM EntityDefinition ORDER BY QualifiedApiName ASC
+    conn.query('SELECT Id, gender__c, email__c FROM testData__c LIMIT 300', function(err, result) {
       if (err) {
         return console.error(err);
       }
@@ -31,7 +31,7 @@ conn.login(username, password, function(err, userInfo) {
       console.log("Fetched records: " + result.records.length);
       // Work with the queried records here
       result.records.forEach((record) => {
-        console.log(record.gender__c + "," + record.First_Name__c);
+        console.log(record.gender__c);
       });
     });
 

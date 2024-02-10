@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/codyc-f/Salesforce-export-metadata#readme",
   "dependencies": {
+    "fast-csv": "^5.0.0",
     "jsforce": "^1.11.1"
   }
 }
