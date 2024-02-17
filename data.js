@@ -9,7 +9,7 @@ const conn = new jsforce.Connection({
 
 // Salesforce credentials
 const username = 'arvoailtd@pboedition.com';
-const password = ''; // Include the security token
+const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO';
 
 // Async function to describe and retrieve metadata
 async function describeAndRetrieveMetadata() {

@@ -23,7 +23,7 @@ conn.login(username, password, function(err, userInfo) {
 
     // Perform operations after successful connection
     //SELECT Label, QualifiedApiName FROM EntityDefinition ORDER BY QualifiedApiName ASC
-    conn.query('SELECT Id, gender__c, email__c FROM testData__c LIMIT 300', function(err, result) {
+    conn.query('SELECT FIELDS(ALL) FROM testData__c LIMIT 300', function(err, result) {
       if (err) {
         return console.error(err);
       }
