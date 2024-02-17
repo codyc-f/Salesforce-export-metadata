@@ -1,3 +1,9 @@
+//need Discard.csv file
+//need required packages to be installed 
+//can run directly with (in terminal)
+//node getRecordCsv.js
+
+
 const jsforce = require('jsforce');
 const fs = require('fs');
 const csv = require('fast-csv');
