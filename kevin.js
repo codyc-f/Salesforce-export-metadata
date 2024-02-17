@@ -14,6 +14,7 @@ const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Include the security 
 
   
   async function queryAndExportAllRecords() {
+    const sObjectNames = [];
     try {
       // Login to Salesforce
       await conn.login(username, password);
@@ -29,6 +30,8 @@ const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Include the security 
   
       for (const sObjectName of sObjects) {
         console.log(`Querying records for: ${sObjectName}`);
+        sObjectNames.push(sObjectName);
+        
   
         // Dynamically describe sObject to get all field names
         const objectDescribe = await conn.sobject(sObjectName).describe();
@@ -63,6 +66,9 @@ const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Include the security 
       }
     } catch (error) {
       console.error('Error connecting to Salesforce:', error);
+    }
+    finally{
+        console.log('Processed sObjects:', sObjectNames);
     }
   }
   
