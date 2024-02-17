@@ -1,5 +1,6 @@
 const jsforce = require('jsforce');
-const { DuckDB } = require('duckdb');
+const fs = require('fs');
+const csv = require('fast-csv');
 
 // Create a connection to Salesforce
 const conn = new jsforce.Connection({
@@ -8,25 +9,36 @@ const conn = new jsforce.Connection({
 
 // Salesforce credentials
 const username = 'arvoailtd@pboedition.com';
-const password = 'yourpassword'; // Include the security token
+const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Include the security token
 
-// Create a new DuckDB instance and connection
-const db = new DuckDB();
-const dbConnection = db.connect();
-
-async function queryAndExportAllRecordsToDuckDB() {
+async function queryAndExportAllRecords() {
   try {
     // Login to Salesforce
     await conn.login(username, password);
     console.log('Connected to Salesforce');
 
-    // Describe global to get all sObjects
+    // Read the Discard.csv file to get a list of sObjects to ignore
+    const discardStream = fs.createReadStream('Discard.csv');
+    const discardedSObjects = await new Promise((resolve, reject) => {
+      let sObjects = [];
+      csv.parseStream(discardStream, { headers: true })
+        .on('data', row => {
+          sObjects.push(row.sObjectName); // Assuming the column name is sObjectName
+        })
+        .on('end', () => resolve(sObjects))
+        .on('error', reject);
+    });
+
+    // Describe global to get all sObjects and filter out non-queryable, blacklisted, and discarded objects
     const globalDescribe = await conn.describeGlobal();
-    const sObjects = globalDescribe.sobjects.filter(obj => obj.queryable).map(obj => obj.name);
+    const sObjects = globalDescribe.sobjects
+      .filter(obj => obj.queryable)
+      .filter(obj => !discardedSObjects.includes(obj.name)) // Exclude discarded sObjects
+      .map(obj => obj.name);
 
     for (const sObjectName of sObjects) {
       console.log(`Querying records for: ${sObjectName}`);
-
+      
       // Dynamically describe sObject to get all field names
       const objectDescribe = await conn.sobject(sObjectName).describe();
       const fieldNames = objectDescribe.fields.map(field => field.name).join(', ');
@@ -36,42 +48,32 @@ async function queryAndExportAllRecordsToDuckDB() {
         const query = `SELECT ${fieldNames} FROM ${sObjectName}`;
         const records = await conn.query(query);
 
-        // Create table in DuckDB if not exists and prepare insert statement
-        const createTableQuery = generateCreateTableQuery(sObjectName, objectDescribe.fields);
-        await dbConnection.execute(createTableQuery);
+        // Prepare CSV file for object records
+        const writableStream = fs.createWriteStream(`records_${sObjectName}.csv`);
+        const csvStream = csv.format({ headers: true });
+        csvStream.pipe(writableStream);
 
-        // Prepare insert statement
-        const insertQuery = `INSERT INTO ${sObjectName} VALUES ?`;
-        
-        // Map records for insertion
-        const recordsToInsert = records.records.map(record => {
-          return objectDescribe.fields.map(field => record[field.name]);
+        // Write each record to CSV
+        records.records.forEach(record => {
+          // Flatten record for CSV output
+          const flattenedRecord = {};
+          objectDescribe.fields.forEach(field => {
+            flattenedRecord[field.name] = record[field.name];
+          });
+          csvStream.write(flattenedRecord);
         });
 
-        // Insert records into DuckDB
-        if (recordsToInsert.length > 0) {
-          await dbConnection.execute(insertQuery, [recordsToInsert]);
-        }
-
-        console.log(`Records for ${sObjectName} have been inserted into DuckDB.`);
+        // Close the CSV stream
+        csvStream.end();
+        console.log(`Records for ${sObjectName} have been written to CSV.`);
       } catch (queryError) {
         console.error(`Failed to query ${sObjectName}:`, queryError);
       }
     }
   } catch (error) {
     console.error('Error connecting to Salesforce:', error);
-  } finally {
-    // Close DuckDB connection
-    dbConnection.close();
-    db.close();
   }
 }
 
-// Helper function to generate SQL CREATE TABLE query based on Salesforce object fields
-function generateCreateTableQuery(tableName, fields) {
-  const fieldDefinitions = fields.map(field => `${field.name} VARCHAR`).join(', ');
-  return `CREATE TABLE IF NOT EXISTS ${tableName} (${fieldDefinitions})`;
-}
-
 // Run the function
-queryAndExportAllRecordsToDuckDB();
+queryAndExportAllRecords();
