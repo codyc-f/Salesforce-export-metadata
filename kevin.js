@@ -11,6 +11,7 @@ const conn = new jsforce.Connection({
 const username = 'arvoailtd@pboedition.com';
 const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Include the security token
 
+
   
   async function queryAndExportAllRecords() {
     try {
@@ -22,6 +23,8 @@ const password = '1234BurgeriKHP9ebmEFZiQsLy5dsFYwYMO'; // Include the security 
       const globalDescribe = await conn.describeGlobal();
       const sObjects = globalDescribe.sobjects
         .filter(obj => obj.queryable)
+        .filter(obj => obj.queryable)
+
         .map(obj => obj.name);
   
       for (const sObjectName of sObjects) {
