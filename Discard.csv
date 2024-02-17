@@ -248,7 +248,6 @@ KPIapp__Partner_Settings__c
 KPIapp__Setup_Data__Share
 KPIapp__Setup_Data__c
 KnowledgeableUser
-Lead
 LeadFeed
 LeadHistory
 LeadShare
@@ -288,7 +287,6 @@ NamespaceRegistryHistory
 Note
 OauthToken
 ObjectPermissions
-Opportunity
 OpportunityCompetitor
 OpportunityContactRole
 OpportunityFeed
