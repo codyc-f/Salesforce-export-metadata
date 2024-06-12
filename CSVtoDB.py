@@ -35,7 +35,10 @@ for csv_file in csv_files:
         print(f"Creating table {table_name}.")
         conn.execute(f"CREATE TABLE {table_name} AS SELECT * FROM read_csv_auto('{csv_file}')")
 
-query = f"SELECT * FROM records_Account"
+query = f"SELECT Id FROM records_Account"
+result_df = conn.execute(query).fetchdf()
+print(result_df)
+query = f"SELECT AccountId FROM records_Opportunity"
 result_df = conn.execute(query).fetchdf()
 print(result_df)
 # Close the connection
